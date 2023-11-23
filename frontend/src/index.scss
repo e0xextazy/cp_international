@@ -1,0 +1,56 @@
+@font-face {
+  font-family: "Light";
+  src: url("fonts/jost/Jost-Light.ttf") format("opentype");
+}
+
+@font-face {
+  font-family: "Regular";
+  src: url("fonts/jost/Jost-Regular.ttf") format("opentype");
+}
+
+@font-face {
+  font-family: "Medium";
+  src: url("fonts/jost/Jost-Medium.ttf") format("opentype");
+}
+
+:root {
+  // colors
+  --primary-background: #1A1C1E;
+  --secondary-background: #313437;
+
+  --accent-info: #5D88DD;
+  --accent-success: #A9FE95;
+  --accent-danger: #FF7171;
+
+  --primary-text: #ffffff;
+  --secondary-text: #6F7071;
+
+  // fonts
+  --font-xxl: 72px;
+  --font-xl: 36px;
+  --font-l: 30px;
+  --font-md: 24px;
+  --font-sm: 18px;
+  --font-s: 14px;
+  --font-xs: 12px;
+}
+
+* {
+  margin: 0;
+
+  color: var(--primary-text);
+
+  font-family: "Light";
+  font-weight: 400;
+  font-size: 18px;
+}
+
+
+img {
+  image-rendering: crisp-edges;
+}
+
+h1 {
+  font-size: var(--font-xxl);
+  font-family: "Medium";
+}
