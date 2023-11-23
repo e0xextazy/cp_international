@@ -34,7 +34,6 @@ export const ActionPage = ({ onNav }: PageProps) => {
       return (
         <>
           <h2 className={styles.title}>Результаты анализа обращения</h2>
-          <img src="images/klim.jpg" height="400px" />
           <div className={styles.buttons}>
             <Button size="md" className={styles.sendBtn} onClick={reset}>
               Отправить новый запрос
