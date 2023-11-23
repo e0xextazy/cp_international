@@ -10,25 +10,26 @@ import { Header } from '../widgets/Header/Header';
 import { ActionPage } from '../pages/ActionPage/ActionPage';
 import { AppPages } from './config';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
+import { useAppStore } from '../store';
 
 const theme = createTheme({});
 
 export function App() {
-  const [page, setPage] = useState(AppPages.START_PAGE);
+  const { page, setPage } = useAppStore();
   const [animRef] = useAutoAnimate();
 
   const getPage = () => {
     if (page === AppPages.ACTION_PAGE) {
-      return <ActionPage onNav={setPage} />;
+      return <ActionPage />;
     }
 
-    return <StartScreenPage onNav={setPage} />;
+    return <StartScreenPage />;
   };
 
   return (
     <MantineProvider defaultColorScheme="dark" theme={theme}>
-      <Header />
       <div className={styles.layout} ref={animRef}>
+        <Header />
         {getPage()}
       </div>
     </MantineProvider>

@@ -7,12 +7,9 @@ export const Header = () => {
     <div className={styles.header}>
       <HackathonLogo />
       <div className={styles.profile}>
-        <span>5random</span>
-        <Indicator size="6" processing>
-          <Avatar
-            radius="xs"
-            src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-1.png"
-          />
+        <span>5random team</span>
+        <Indicator size="6" processing color="yellow">
+          <Avatar radius="xs" src="images/team-logo.jpg" />
         </Indicator>
       </div>
     </div>

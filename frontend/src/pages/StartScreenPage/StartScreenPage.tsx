@@ -3,14 +3,15 @@ import { IconArrowRight } from '@tabler/icons-react';
 import { Button } from '@mantine/core';
 
 import styles from './StartScreenPage.module.scss';
-import { PageProps } from '../../shared/page';
 import { AppPages } from '../../app/config';
+import { useAppStore } from '../../store';
 
-export const StartScreenPage = ({ onNav }: PageProps) => {
+export const StartScreenPage = () => {
+  const { setPage } = useAppStore();
   const glitch = useGlitch();
 
   const goToAction = () => {
-    onNav(AppPages.ACTION_PAGE);
+    setPage(AppPages.ACTION_PAGE);
   };
 
   return (

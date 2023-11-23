@@ -1,0 +1,16 @@
+.title {
+    font-size: $font-xl;
+}
+
+.buttons {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+
+    position: absolute;
+    bottom: 68px;
+}
+
+.textarea {
+    width: 100%;
+}

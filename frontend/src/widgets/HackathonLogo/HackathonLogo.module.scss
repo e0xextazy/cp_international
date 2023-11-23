@@ -2,5 +2,8 @@
     img {
         height: 20px;
         image-rendering: crisp-edges;
+
+        position: relative;
+        top: 4px;
     }
 }

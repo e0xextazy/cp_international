@@ -8,12 +8,16 @@
 
 .form {
     min-width: 320px;
-    width: 768px;
+    width: 100%;
+
     max-width: 768px;
     height: 100%;
 
-    padding: 48px 16px;
+    padding-top: 92px;
+    position: relative;
+}
 
+.content {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -38,6 +42,3 @@
     bottom: 68px;
 }
 
-.sendBtn {
-    flex: 1;
-}

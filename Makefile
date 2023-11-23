@@ -1,4 +1,4 @@
-dev-front:
+dev:
 	npm run dev --prefix frontend
 
 setup:
