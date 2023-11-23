@@ -54,3 +54,8 @@ h1 {
   font-size: var(--font-xxl);
   font-family: "Medium";
 }
+
+.mantine-Textarea-label {
+  padding-bottom: 12px;
+  font-size: var(--font-md) !important;
+}

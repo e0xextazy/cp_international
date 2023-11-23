@@ -1,0 +1,43 @@
+.page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    height: 100%;
+}
+
+.form {
+    min-width: 320px;
+    width: 768px;
+    max-width: 768px;
+    height: 100%;
+
+    padding: 48px 16px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 32px;
+    position: relative;
+}
+
+.title {
+    font-size: $font-xl;
+}
+
+.requestField {
+    min-height: 80px;
+}
+
+.buttons {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+
+    position: absolute;
+    bottom: 68px;
+}
+
+.sendBtn {
+    flex: 1;
+}
