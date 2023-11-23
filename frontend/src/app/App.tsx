@@ -7,14 +7,15 @@ import styles from './App.module.scss';
 
 import { StartScreenPage } from '../pages/StartScreenPage/StartScreenPage';
 import { Header } from '../widgets/Header/Header';
-import { Footer } from '../widgets/Footer/Footer';
 import { ActionPage } from '../pages/ActionPage/ActionPage';
 import { AppPages } from './config';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 
 const theme = createTheme({});
 
 export function App() {
   const [page, setPage] = useState(AppPages.START_PAGE);
+  const [animRef] = useAutoAnimate();
 
   const getPage = () => {
     if (page === AppPages.ACTION_PAGE) {
@@ -27,8 +28,9 @@ export function App() {
   return (
     <MantineProvider defaultColorScheme="dark" theme={theme}>
       <Header />
-      <div className={styles.layout}>{getPage()}</div>
-      <Footer />
+      <div className={styles.layout} ref={animRef}>
+        {getPage()}
+      </div>
     </MantineProvider>
   );
 }
