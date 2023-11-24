@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { MantineProvider, createTheme } from '@mantine/core';
 
 import '@mantine/core/styles.css';
@@ -11,11 +10,14 @@ import { ActionPage } from '../pages/ActionPage/ActionPage';
 import { AppPages } from './config';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { useAppStore } from '../store';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 const theme = createTheme({});
 
+const queryClient = new QueryClient();
+
 export function App() {
-  const { page, setPage } = useAppStore();
+  const { page } = useAppStore();
   const [animRef] = useAutoAnimate();
 
   const getPage = () => {
@@ -27,11 +29,13 @@ export function App() {
   };
 
   return (
-    <MantineProvider defaultColorScheme="dark" theme={theme}>
-      <div className={styles.layout} ref={animRef}>
-        <Header />
-        {getPage()}
-      </div>
-    </MantineProvider>
+    <QueryClientProvider client={queryClient}>
+      <MantineProvider defaultColorScheme="dark" theme={theme}>
+        <div className={styles.layout} ref={animRef}>
+          <Header />
+          {getPage()}
+        </div>
+      </MantineProvider>
+    </QueryClientProvider>
   );
 }

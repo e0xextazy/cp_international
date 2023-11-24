@@ -1,6 +1,5 @@
 import styles from './ActionPage.module.scss';
 
-import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { Response } from './sub/Response/Response';
 import { SendRequestForm } from './sub/SendRequestForm/SendRequestForm';
 
@@ -9,9 +8,6 @@ import { ActionPanel } from './sub/ActionPanel/ActionPanel';
 
 export const ActionPage = () => {
   const { response } = useAppStore();
-
-  const [ref] = useAutoAnimate();
-
   const renderFormContent = () => {
     if (response) {
       return <Response className={styles.content} />;
@@ -22,8 +18,8 @@ export const ActionPage = () => {
 
   return (
     <div className={styles.page}>
-      <div className={styles.form} ref={ref}>
-        {renderFormContent()}
+      <div className={styles.form}>
+        <div className={styles.contentWrapper}>{renderFormContent()}</div>
         <ActionPanel />
       </div>
     </div>
