@@ -21,5 +21,7 @@ jobs:
         with:
           node-version: 20
 
+      - name: Create env
+        run: touch .env
       - name: Test build frontend
-        run: touch .env && docker compose up --build
+        run: docker compose up --build -d
