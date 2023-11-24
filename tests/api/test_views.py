@@ -13,3 +13,16 @@ def test_health(
     with client:
         response = client.get("/health")
     assert response.status_code == HTTPStatus.OK
+
+
+def test_get_reco_success(
+    client: TestClient,
+    service_config: ServiceConfig,
+) -> None:
+    pass
+
+
+def test_get_reco_for_unknown_user(
+    client: TestClient,
+) -> None:
+    pass
