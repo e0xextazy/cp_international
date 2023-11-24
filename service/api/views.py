@@ -5,7 +5,7 @@ from pydantic import BaseModel, Json
 
 from service.log import app_logger
 
-from ..ner_model import NER
+from .ner_model import NER
 
 
 class RecoResponse(BaseModel):
