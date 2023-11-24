@@ -75,4 +75,13 @@ run: build
 
 all: setup format lint test run
 
+dev:
+	npm run dev --prefix frontend
+
+setup_front:
+	cd frontend && npm i
+
+lint_front:
+	npm run lint --prefix frontend
+
 .DEFAULT_GOAL = all
