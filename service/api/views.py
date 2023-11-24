@@ -10,7 +10,7 @@ class RecoResponse(BaseModel):
     executor: str | None
     topic: str | None
     subtopic: str | None
-    tags: Dict[str, List[str]]
+    tags: Dict[str, object]
 
 
 class RecoRequest(BaseModel):
