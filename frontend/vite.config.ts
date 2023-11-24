@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 
 import react from '@vitejs/plugin-react';
+import { resolve } from 'path';
 
 export default defineConfig({
   plugins: [
@@ -18,6 +19,11 @@ export default defineConfig({
   server: {
     watch: {
       usePolling: true,
+    },
+  },
+  resolve: {
+    alias: {
+      '@fonts': resolve('./public/fonts'),
     },
   },
 });
