@@ -27,10 +27,10 @@ describe('useAppStore', () => {
     const { result } = renderHook(() => useAppStore());
 
     act(() => {
-      result.current.setResponse('sample response');
+      result.current.setResponse(null);
     });
 
-    expect(result.current.response).toBe('sample response');
+    expect(result.current.response).toBe(null);
   });
 
   test('should set page', () => {

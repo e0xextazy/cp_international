@@ -1,14 +1,28 @@
 import { create } from 'zustand';
 import { AppPages } from '../app/config';
 
+export type ApiRequest = {
+  appeal: string;
+  confidenceThreshold: number;
+};
+
+export type TagsKeys = 'LOC' | 'ORG' | 'PER' | 'PHONE' | 'MONEY' | 'ADDRESS' | 'DATE';
+
+export type ApiResponse = {
+  executor: string | null;
+  topic: string | null;
+  subtopic: string | null;
+  tags: Record<TagsKeys, string[]>;
+};
+
 export interface Store {
   page: AppPages;
   request: string | null;
-  response: any | null;
+  response: ApiResponse | null;
   confidenceThreshold: number;
   setConfidenceThreshold: (threshold: number) => void;
   setRequest: (request: string) => void;
-  setResponse: (response: any) => void;
+  setResponse: (response: ApiResponse | null) => void;
   setPage: (page: AppPages) => void;
   goToHome: () => void;
 }

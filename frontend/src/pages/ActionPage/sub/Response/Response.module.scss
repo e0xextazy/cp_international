@@ -8,17 +8,41 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
+    max-width: 768px;
+    overflow-x: auto;
 }
 
 .metrics {
     display: flex;
-    gap: 8px;
+    gap: 12px;
+    max-width: 100%;
+    flex-wrap: wrap;
 }
 
 .metric {
+    flex: 200px;
+    min-width: 200px;
     padding: 12px 16px;
 }
 
 .moderateBtn {
-    margin-top: 24px;
+    margin-top: 6px;
+}
+
+.alert {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    span {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+
+        svg {
+            position: relative;
+            bottom: 1px;
+        }
+    }
 }

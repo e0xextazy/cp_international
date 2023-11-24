@@ -21,8 +21,7 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install dependencies
-        run: cd frontend && npm ci
-
-      - name: Build frontend
-        run: cd frontend && npm run build
+      - name: Create env
+        run: touch .env
+      - name: Test build frontend
+        run: docker compose up --build -d

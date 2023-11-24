@@ -3,6 +3,11 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm ci
 COPY . .
+ARG VITE_BACKEND_URL=${BACKEND_URL}
+ARG VITE_FRONTEND_PORT=${FRONTEND_PORT}
+RUN touch .env
+RUN printenv > .env
+
 RUN npm run build
 
 FROM nginx:latest as proxy
