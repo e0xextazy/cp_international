@@ -2,8 +2,8 @@
 name = "reco_service"
 version = "0.0.1"
 description = ""
-authors = [""]
-maintainers = [""]
+authors = ["John Smith <john@example.com>"]
+maintainers = ["John Smith <john@example.com>"]
 readme = "README.md"
 packages = [
     { include = "service" }
