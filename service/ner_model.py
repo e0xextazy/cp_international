@@ -1,5 +1,5 @@
 import re
-from typing import Dict, List
+from typing import Any, Dict, List
 
 from natasha import (
     AddrExtractor,
@@ -35,7 +35,7 @@ class NER:
 
         return phone_numbers
 
-    def get_tags(self, text: str) -> Dict[str, object]:
+    def get_tags(self, text: str) -> Dict[str, List[Any]]:
         doc = Doc(text)
 
         doc.segment(self.segmenter)
@@ -48,7 +48,7 @@ class NER:
             span.extract_fact(self.names_extractor)
 
         # LOC, ORG, PER
-        dt = {"LOC": [], "ORG": [], "PER": []}
+        dt = {"LOC": [], "ORG": [], "PER": []}  # type: Dict[str, List[Any]]
 
         for span in doc.spans:
             dt[span.type].append(span.normal)
