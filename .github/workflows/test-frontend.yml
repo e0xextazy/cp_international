@@ -22,7 +22,7 @@ jobs:
         node-version: 20
 
     - name: Install dependencies
-      run: cd frontend && npm install npx -g && npm install
+      run: cd frontend && npm install
 
     - name: Run tests
-      run: cd frontend && npx test
+      run: cd frontend && npm run test
