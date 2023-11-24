@@ -1,10 +1,7 @@
 from typing import Dict, List
 
-from fastapi import APIRouter, Body, FastAPI, Form, Request
+from fastapi import APIRouter, Body, FastAPI
 from pydantic import BaseModel, Json
-
-from service.api.exceptions import UserNotFoundError
-from service.log import app_logger
 
 from ..ner_model import NER
 
