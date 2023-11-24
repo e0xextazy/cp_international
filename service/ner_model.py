@@ -1,4 +1,5 @@
 import re
+from typing import Dict, List
 
 from natasha import (
     AddrExtractor,
@@ -16,7 +17,7 @@ from natasha import (
 
 
 class NER:
-    def __init__(self):
+    def __init__(self) -> None:
         self.segmenter = Segmenter()
         self.morph_vocab = MorphVocab()
         self.emb = NewsEmbedding()
@@ -29,12 +30,12 @@ class NER:
         self.money_extractor = MoneyExtractor(self.morph_vocab)
         self.phone_pattern = re.compile(r"\+?\d{1,4}?[-\s]??[-\s]?\d{1,4}[-\s]?\d{1,4}[-\s]?\d{1,9}")
 
-    def _extract_phone_numbers(self, text):
+    def _extract_phone_numbers(self, text: str) -> List[str]:
         phone_numbers = self.phone_pattern.findall(text)
 
         return phone_numbers
 
-    def get_tags(self, text):
+    def get_tags(self, text: str) -> Dict[str, object]:
         doc = Doc(text)
 
         doc.segment(self.segmenter)

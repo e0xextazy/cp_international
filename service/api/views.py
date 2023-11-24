@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, Union
 
 from fastapi import APIRouter, Body, FastAPI
 from pydantic import BaseModel, Json
@@ -9,10 +9,10 @@ from ..ner_model import NER
 
 
 class RecoResponse(BaseModel):
-    executor: str | None
-    topic: str | None
-    subtopic: str | None
-    tags: Dict[str, List[str]]
+    executor: Union[str, None]
+    topic: Union[str, None]
+    subtopic: Union[str, None]
+    tags: Dict[str, object]
 
 
 class RecoRequest(BaseModel):
