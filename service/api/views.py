@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict
 
 from fastapi import APIRouter, Body, FastAPI
 from pydantic import BaseModel, Json
