@@ -1,30 +1,26 @@
 import os
 
-OUTPUT_DIR = 'output'
+OUTPUT_DIR = 'output_me5'
 if not os.path.exists(OUTPUT_DIR):
     os.makedirs(OUTPUT_DIR)
 
 class CFG:
-    wandb=True
-    competition='FB3'
-    _wandb_kernel='nakama'
-    debug=False
-    apex=False
-    print_freq=50
+    apex=True
+    print_freq=100
     num_workers=8
-    model="cointegrated/rubert-tiny2"
-    gradient_checkpointing=False
+    model="intfloat/multilingual-e5-large"
+    gradient_checkpointing=True
     scheduler='cosine' # ['linear', 'cosine']
     batch_scheduler=True
     num_cycles=0.5
     num_warmup_steps=0
-    epochs=3
+    epochs=10
     encoder_lr=2e-5
     decoder_lr=2e-5
     min_lr=1e-6
     eps=1e-6
     betas=(0.9, 0.999)
-    batch_size=64
+    batch_size=32
     max_len=512
     weight_decay=0.01
     gradient_accumulation_steps=1
@@ -32,53 +28,47 @@ class CFG:
     target_cols=['Исполнитель', 'Группа тем', 'Тема']
     seed=42
     n_fold=5
-    trn_fold=[0]
+    trn_fold=[0, 1, 2, 3, 4]
     train=True
 
-import os
 import gc
 import re
-import ast
-import sys
-import copy
-import json
 import time
 import math
-import string
-import pickle
 import random
-import itertools
 import warnings
 warnings.filterwarnings("ignore")
 
 import numpy as np
 import pandas as pd
+import pickle
 pd.set_option('display.max_rows', 500)
 pd.set_option('display.max_columns', 500)
 pd.set_option('display.width', 1000)
 from tqdm.auto import tqdm
-from sklearn.metrics import mean_squared_error
-from sklearn.model_selection import StratifiedKFold, GroupKFold, KFold
 from sklearn.preprocessing import LabelEncoder
 
 from iterstrat.ml_stratifiers import MultilabelStratifiedKFold
 
 import torch
 import torch.nn as nn
-from torch.nn import Parameter
-import torch.nn.functional as F
-from torch.optim import Adam, SGD, AdamW
+from torch.optim import AdamW
 from torch.utils.data import DataLoader, Dataset
 from sklearn.metrics import f1_score
 
-import tokenizers
-import transformers
 from transformers import AutoTokenizer, AutoModel, AutoConfig
 from transformers import get_linear_schedule_with_warmup, get_cosine_schedule_with_warmup
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
+from arcface import ArcFace
+
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
+
+def preprocess(df):
+    df["Текст инцидента"] = df["Текст инцидента"].apply(lambda x: " ".join(re.findall(r"[а-яА-Я0-9 ёЁ\-\.,?!+a-zA-Z]+", x)))
+
+    return df
 
 def get_score(y_trues, exec_predictions, topic_predictions, subtopic_predictions):
     exec_predictions = [np.argmax(el) for el in exec_predictions]
@@ -118,9 +108,9 @@ def seed_everything(seed=42):
 seed_everything(seed=42)
 
 train = pd.read_csv("train_dataset_train.csv", delimiter=";")
-train["len"] = train["Текст инцидента"].apply(len)
-train = train[train.len > 4].reset_index(drop=True)
-train.head()
+train = preprocess(train)
+if CFG.model == "intfloat/multilingual-e5-large":
+    train["Текст инцидента"] = train["Текст инцидента"].apply(lambda x: "query: " + x)
 
 executor_le = LabelEncoder()
 topic_le = LabelEncoder()
@@ -133,7 +123,13 @@ subtopic_le.fit(train["Тема"].tolist())
 train["Исполнитель"] = executor_le.transform(train["Исполнитель"].tolist())
 train["Группа тем"] = topic_le.transform(train["Группа тем"].tolist())
 train["Тема"] = subtopic_le.transform(train["Тема"].tolist())
-train.head()
+
+with open(os.path.join(OUTPUT_DIR, "executor_le.pkl"), "wb") as f:
+    pickle.dump(executor_le, f)
+with open(os.path.join(OUTPUT_DIR, "topic_le.pkl"), "wb") as f:
+    pickle.dump(topic_le, f)
+with open(os.path.join(OUTPUT_DIR, "subtopic_le.pkl"), "wb") as f:
+    pickle.dump(subtopic_le, f)
 
 Fold = MultilabelStratifiedKFold(n_splits=CFG.n_fold, shuffle=True, random_state=CFG.seed)
 for n, (train_index, val_index) in enumerate(Fold.split(train, train[CFG.target_cols])):
@@ -384,6 +380,9 @@ def train_loop(folds, fold):
     # loader
     # ====================================================
     train_folds = folds[folds['fold'] != fold].reset_index(drop=True)
+    train_folds["len"] = train_folds["Текст инцидента"].apply(len)
+    train_folds = train_folds[train_folds.len > 10].reset_index(drop=True)
+
     valid_folds = folds[folds['fold'] == fold].reset_index(drop=True)
     valid_labels = valid_folds[CFG.target_cols].values
     
@@ -461,14 +460,15 @@ def train_loop(folds, fold):
         
         # scoring
         score, exec_score, topic_score, subtopic_score = get_score(valid_labels, exec_predictions, topic_predictions, subtopic_predictions)
+        target_score = (topic_score + subtopic_score) / 2
 
         elapsed = time.time() - start_time
 
         LOGGER.info(f'Epoch {epoch+1} - avg_train_loss: {avg_loss:.4f}  avg_val_loss: {avg_val_loss:.4f}  time: {elapsed:.0f}s')
-        LOGGER.info(f'Epoch {epoch+1} - Score: {score:.4f}  Scores: {exec_score}, {topic_score}, {subtopic_score}')
+        LOGGER.info(f'Epoch {epoch+1} - Score: {score:.4f} Target_score: {target_score} Scores: {exec_score}, {topic_score}, {subtopic_score}')
         
-        if best_score < score:
-            best_score = score
+        if best_score < target_score:
+            best_score = target_score
             LOGGER.info(f'Epoch {epoch+1} - Save Best Score: {best_score:.4f} Model')
             torch.save({'model': model.state_dict(),
                         'exec_predictions': exec_predictions,
@@ -500,9 +500,14 @@ if __name__ == '__main__':
         exec_predictions = oof_df["pred_Исполнитель"].tolist()
         topic_predictions = oof_df["pred_Группа тем"].tolist()
         subtopic_predictions = oof_df["pred_Тема"].tolist()
-        
-        score, exec_score, topic_score, subtopic_score = get_score(labels, exec_predictions, topic_predictions, subtopic_predictions)
-        LOGGER.info(f'Score: {score:.4f}  Scores: {exec_score}, {topic_score}, {subtopic_score}')
+
+        exec_score = f1_score(labels[:, 0], exec_predictions, average="weighted")
+        topic_score = f1_score(labels[:, 1], topic_predictions, average="weighted")
+        subtopic_score = f1_score(labels[:, 2], subtopic_predictions, average="weighted")
+        score = (exec_score + topic_score + subtopic_score) / 3
+        target_score = (topic_score + subtopic_score) / 2
+
+        LOGGER.info(f'Score: {score:.4f} Target_score: {target_score} Scores: {exec_score}, {topic_score}, {subtopic_score}')
     
     if CFG.train:
         oof_df = pd.DataFrame()
@@ -516,3 +521,13 @@ if __name__ == '__main__':
         LOGGER.info(f"========== CV ==========")
         get_result(oof_df)
         oof_df.to_pickle(os.path.join(OUTPUT_DIR, 'oof_df.pkl'))
+
+# Score: 0.4517  Scores: 0.5862205074549323, 0.6479170153432593, 0.1209663056807175
+# Score: 0.5763  Scores: 0.6913450545354435, 0.7512246627918137, 0.2864274268198062
+# Score: 0.7029  Scores: 0.7962368363448548, 0.7960596829413883, 0.5163428007272964 labse
+# Score: 0.7019  Scores: 0.7780876030776162, 0.8025588596457075, 0.5249183770993493 sbert
+# Score: 0.7060  Scores: 0.7782025438890126, 0.8076007818503781, 0.532137395561472 me5
+
+# 0.6404  Scores: 0.7122581791303981, 0.7836593459714929, 0.4253014277552441 labse 3 epochs
+# 0.6430  Scores: 0.7164826041073926, 0.7842373680483296, 0.4281427101209568 labse 3 epochs filter less 10
+# 0.6432  Scores: 0.7136316267192518, 0.7860594821236965, 0.4298897423121912 labse 3 epochs filter chars
