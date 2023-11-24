@@ -1,7 +1,9 @@
-from typing import Dict
+from typing import Dict, List
 
 from fastapi import APIRouter, Body, FastAPI
 from pydantic import BaseModel, Json
+
+from service.log import app_logger
 
 from ..ner_model import NER
 
@@ -10,7 +12,7 @@ class RecoResponse(BaseModel):
     executor: str | None
     topic: str | None
     subtopic: str | None
-    tags: Dict[str, object]
+    tags: Dict[str, List[str]]
 
 
 class RecoRequest(BaseModel):
@@ -32,6 +34,7 @@ async def health() -> str:
 
 @router.post("/reco")
 async def get_reco(request: Json[RecoRequest] = Body()) -> RecoResponse:
+    app_logger.info(f"REQUEST")
     appeal = request.appeal
     print(appeal)
     threshold = request.confidenceThreshold
