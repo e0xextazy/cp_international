@@ -1,18 +1,28 @@
-from typing import List
+from typing import Dict, List
 
-from fastapi import APIRouter, FastAPI, Request
-from pydantic import BaseModel
+from fastapi import APIRouter, Body, FastAPI, Form, Request
+from pydantic import BaseModel, Json
 
 from service.api.exceptions import UserNotFoundError
 from service.log import app_logger
 
+from ..ner_model import NER
+
 
 class RecoResponse(BaseModel):
-    user_id: int
-    items: List[int]
+    executor: str | None
+    topic: str | None
+    subtopic: str | None
+    tags: Dict[str, List[str]]
+
+
+class RecoRequest(BaseModel):
+    appeal: str
+    confidenceThreshold: float
 
 
 router = APIRouter()
+ner = NER()
 
 
 @router.get(
@@ -23,26 +33,24 @@ async def health() -> str:
     return "I am alive"
 
 
-@router.get(
-    path="/reco/{model_name}/{user_id}",
-    tags=["Recommendations"],
-    response_model=RecoResponse,
-)
-async def get_reco(
-    request: Request,
-    model_name: str,
-    user_id: int,
-) -> RecoResponse:
-    app_logger.info(f"Request for model: {model_name}, user_id: {user_id}")
+@router.post("/reco")
+async def get_reco(request: Json[RecoRequest] = Body()) -> RecoResponse:
+    appeal = request.appeal
+    print(appeal)
+    threshold = request.confidenceThreshold
+    print(threshold)
 
-    # Write your code here
-
-    if user_id > 10**9:
-        raise UserNotFoundError(error_message=f"User {user_id} not found")
-
-    k_recs = request.app.state.k_recs
-    reco = list(range(k_recs))
-    return RecoResponse(user_id=user_id, items=reco)
+    dt = {
+        "LOC": ["Москва"],
+        "ORG": ["МЧС"],
+        "PER": ["Иван", "Иванов"],
+        "PHONE": [],
+        "MONEY": [],
+        "ADDRESS": ["ул. Энтузиастов"],
+        "DATE": ["09.09.09"],
+    }
+    respone = RecoResponse(executor="executor_1", topic=None, subtopic=None, tags=dt)
+    return respone
 
 
 def add_views(app: FastAPI) -> None:
