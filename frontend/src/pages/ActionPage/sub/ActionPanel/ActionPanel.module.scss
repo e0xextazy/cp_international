@@ -1,0 +1,27 @@
+.actionWrapper {
+  width: 100%;
+  
+  position: absolute;
+  bottom: 0px;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 32px;
+}
+
+.buttons {
+    display: flex;
+    gap: 8px;
+    
+}
+
+  .sendBtn {
+    flex: 100%;
+  }
+
+.settings {
+}
+
+.settingsContent {
+}
