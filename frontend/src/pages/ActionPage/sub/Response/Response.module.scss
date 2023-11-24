@@ -1,0 +1,24 @@
+.fieldList {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.metricsWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.metrics {
+    display: flex;
+    gap: 8px;
+}
+
+.metric {
+    padding: 12px 16px;
+}
+
+.moderateBtn {
+    margin-top: 24px;
+}
