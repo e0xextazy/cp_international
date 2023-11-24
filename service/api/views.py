@@ -34,7 +34,7 @@ async def health() -> str:
 
 @router.post("/reco")
 async def get_reco(request: Json[RecoRequest] = Body()) -> RecoResponse:
-    app_logger.info(f"REQUEST")
+    app_logger.info("REQUEST")
     appeal = request.appeal
     print(appeal)
     threshold = request.confidenceThreshold
