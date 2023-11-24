@@ -21,7 +21,7 @@ export const SendRequestForm = ({ className }: ActionPageFormProps) => {
         <Textarea
           variant="filled"
           onChange={(e) => setRequest(e.target.value)}
-          value={request}
+          value={request as string}
           label="Введите обращение гражданина"
           placeholder="Обращение"
           className={styles.textarea}
