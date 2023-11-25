@@ -18,11 +18,11 @@ const Settings = () => {
   );
 };
 
-const Buttons = ({ isResponseForm, resetResponse, request, sendRequest, goToHome }) => {
+const Buttons = ({ isResponseForm, resetResponse, request, sendRequest, goToHome, isLoading }) => {
   return (
     <div className={styles.buttons}>
       {isResponseForm ? (
-        <Button {...BUTTON_PROPS} className={styles.sendBtn} onClick={resetResponse}>
+        <Button {...BUTTON_PROPS} loading={isLoading} className={styles.sendBtn} onClick={resetResponse}>
           Отправить новый запрос
         </Button>
       ) : (
@@ -32,6 +32,7 @@ const Buttons = ({ isResponseForm, resetResponse, request, sendRequest, goToHome
           color="green"
           className={styles.sendBtn}
           onClick={sendRequest}
+          loading={isLoading}
         >
           Отправить запрос
         </Button>
@@ -45,7 +46,7 @@ const Buttons = ({ isResponseForm, resetResponse, request, sendRequest, goToHome
 
 export const ActionPanel = () => {
   const { setResponse, response, goToHome, request } = useAppStore();
-  const { mutateAsync: fetchData } = useGetResponse();
+  const { mutateAsync: fetchData, isLoading } = useGetResponse();
 
   const sendRequest = async () => {
     try {
@@ -65,6 +66,7 @@ export const ActionPanel = () => {
     <div className={styles.actionWrapper}>
       {!isResponseForm && <Settings />}
       <Buttons
+        isLoading={isLoading}
         isResponseForm={isResponseForm}
         resetResponse={resetResponse}
         request={request}

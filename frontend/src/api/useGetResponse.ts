@@ -1,7 +1,7 @@
 import { ApiRequest, ApiResponse, useAppStore } from '../store';
 import { useMutation } from 'react-query';
 
-const API_URL = 'https://shop-retained-foam-magical.trycloudflare.com';
+const API_URL = 'https://uni-ye-tile-spectrum.trycloudflare.com';
 
 const useGetResponse = () => {
   const setResponse = useAppStore((state) => state.setResponse);

@@ -10,11 +10,16 @@
     gap: 8px;
     max-width: 768px;
     overflow-x: auto;
+
+    b {
+        text-decoration: underline;
+    }
 }
 
 .metrics {
     display: flex;
-    gap: 12px;
+    flex-direction: column;
+    gap: 6px;
     max-width: 100%;
     flex-wrap: wrap;
 }
@@ -22,6 +27,7 @@
 .metric {
     flex: 200px;
     min-width: 200px;
+
     padding: 12px 16px;
 }
 

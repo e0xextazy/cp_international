@@ -1,4 +1,4 @@
-import { Badge, Button, Fieldset, Textarea } from '@mantine/core';
+import { Button, Fieldset, Textarea } from '@mantine/core';
 
 import styles from './Response.module.scss';
 
@@ -9,6 +9,7 @@ import { IconAlertCircleFilled } from '@tabler/icons-react';
 const TRANSLATE_CONFIG: Record<TagsKeys, string> = {
   LOC: 'Локация',
   ADDRESS: 'Адрес',
+  ADDRES: 'Адрес',
   DATE: 'Дата',
   MONEY: 'Деньги',
   ORG: 'Организация',
@@ -25,7 +26,8 @@ export const Response = ({ className }: ActionPageFormProps) => {
 
   const { executor = '', subtopic = '', topic = '' } = response!;
 
-  const hasUndefinedValues = Object.values(response?.tags || [true]).some((v) => Boolean(v));
+  const hasUndefinedValues = Object.values(response || {}).some((v) => !Boolean(v));
+
   const tags = Object.entries(response?.tags || [])
     .filter(([, val]) => Boolean(val?.length))
     .map(([key, val]) => `${TRANSLATE_CONFIG[key?.toUpperCase() as TagsKeys]}: ${val.join(', ')}`);
@@ -42,12 +44,10 @@ export const Response = ({ className }: ActionPageFormProps) => {
         <Textarea label="Группа тем" value={topic} error={!Boolean(topic)} />
         <Textarea label="Тема" value={subtopic} error={!Boolean(subtopic)} />
         <div className={styles.metricsWrapper}>
-          <h2>Именованные сущности</h2>
+          <h2><b>Именованные сущности</b></h2>
           <div className={styles.metrics}>
             {tags.map((tag, idx) => (
-              <Badge variant="outline" className={styles.metric} key={idx}>
-                {tag}
-              </Badge>
+              <div key={idx}>{tag}</div>
             ))}
           </div>
         </div>
