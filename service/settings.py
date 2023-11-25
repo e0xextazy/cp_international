@@ -22,3 +22,6 @@ def get_config() -> ServiceConfig:
     return ServiceConfig(
         log_config=LogConfig(),
     )
+
+
+config_tmp = get_config

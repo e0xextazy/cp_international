@@ -1,6 +1,6 @@
 import os
 
-OUTPUT_DIR = 'output_me5'
+OUTPUT_DIR = 'output_sbert'
 if not os.path.exists(OUTPUT_DIR):
     os.makedirs(OUTPUT_DIR)
 
@@ -8,7 +8,7 @@ class CFG:
     apex=True
     print_freq=100
     num_workers=8
-    model="intfloat/multilingual-e5-large"
+    model="ai-forever/sbert_large_mt_nlu_ru"
     gradient_checkpointing=True
     scheduler='cosine' # ['linear', 'cosine']
     batch_scheduler=True
